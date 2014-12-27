@@ -91,7 +91,7 @@ public class Hospede {
 			return false;
 		Hospede h1 = (Hospede) obj;
 		
-		return getNome().equals(h1.getNome()) && CPF.equals(h1.getCPF()) && RG.equals(h1.getRG())
+		return nome.equals(h1.getNome()) && CPF.equals(h1.getCPF()) && RG.equals(h1.getRG())
 				&& endereco.equals(h1.getEndereco());
 	}
 
