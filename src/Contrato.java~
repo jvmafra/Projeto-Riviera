@@ -3,7 +3,6 @@ import java.util.List;
 
 
 public class Contrato {
-
 	private Hospede hospede;
 	private List<Servicos> servicos;
 	private EstrategiaCobranca e;
