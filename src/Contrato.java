@@ -114,11 +114,28 @@ public class Contrato {
 			return "FECHADO";
 	}
 	
+	private String imprimeCadaServicoEspecial(){
+		String servicosEspeciais = "-";
+		for (int i = 1; i < servicos.size(); i++) {
+			servicosEspeciais += "\n\n" + servicos.get(i).toString();
+		}
+		
+		return servicosEspeciais;
+	}
+	
+	public String imprimeFaturaFinal(){
+		return hospede.toString() + servicos.get(0).toString()
+				+ "\nServicos especiais (pela ordem): " + imprimeCadaServicoEspecial()
+				+ "\nValor total dos servicos: " + calculaValorServicos() 
+				+ "\n\nValor total da estadia: " + calculaValorTotal()
+				+ "\n\nStatus do contrato: " + mostraStatus();
+	}
+	
 	@Override
 	public String toString(){
 		return hospede.toString() + "\nForma de pagamento: " + getFormaDePagamento()
-				+ "\nPeriodo da hospedagem: " + getPeriodo() + "\nValor dos servicos: "
-				+ calculaValorServicos() + "\nValor total da estadia: " + calculaValorTotal()
+				+ "\nPeriodo da hospedagem: " + getPeriodo() 
+				+ servicos.get(0).toString()
 				+ "Status do contrato: " + mostraStatus();
 	}
 	
