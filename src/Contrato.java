@@ -1,3 +1,5 @@
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +15,8 @@ public class Contrato {
 	private String formaDePagamento;
 	private int periodo;
 	private boolean aberto;
+	private GregorianCalendar data_entrada;
+	private GregorianCalendar data_saida;
 	
 	/**
 	 * Cosntrutor que recebe as informacoes necessarias para criacao de um contrato
@@ -27,7 +31,16 @@ public class Contrato {
 	 * @param formaDePagamento
 	 * 			Recebe a forma de pagamento do hospede
 	 */
-	public Contrato (List<Servicos> servicos, Hospede hospede, EstrategiaCobranca e, int periodo, String formaDePagamento) throws Exception{
+	public Contrato (List<Servicos> servicos, Hospede hospede, EstrategiaCobranca e, GregorianCalendar data_entrada, GregorianCalendar data_saida, String formaDePagamento) throws Exception{
+		if (data_saida.get(Calendar.MONTH) < data_entrada.get(Calendar.MONTH))
+			throw new Exception("Data invalida");
+		
+		if (data_saida.get(Calendar.MONTH) == data_entrada.get(Calendar.MONTH))
+			periodo = data_saida.get(Calendar.DATE) - data_entrada.get(Calendar.DATE);
+		
+		if (data_saida.get(Calendar.MONTH) > data_entrada.get(Calendar.MONTH))
+			//NAO SEI COMO FAZER
+			
 		if (periodo <= 0)
 			throw new Exception("Periodo invalido");
 		
@@ -38,7 +51,8 @@ public class Contrato {
 		this.servicos = servicos;
 		this.e = e;
 		this.formaDePagamento = formaDePagamento;
-		this.periodo = periodo;
+		this.data_entrada = data_entrada;
+		this.data_saida = data_saida;
 		
 		aberto = true;
 	}
@@ -89,6 +103,36 @@ public class Contrato {
 	 */
 	public int getPeriodo() {
 		return periodo;
+	}
+	
+	/**
+	 * Retorna a data de entrada do hospede
+	 * @return data_completa
+	 * 			Data em forma de String
+	 */
+	public String getDataEntrada(){
+		int dia = data_entrada.get(Calendar.DATE);
+		int mes = data_entrada.get(Calendar.MONTH) + 1;
+		int ano = data_entrada.get(Calendar.YEAR);
+		
+		String data_completa = dia + "/" + mes + "/" + ano;
+		
+		return data_completa;
+	}
+	
+	/**
+	 * Retorna a data de saida do hospede
+	 * @return data_completa
+	 * 			Data em forma de String
+	 */
+	public String getDataSaida(){
+		int dia = data_saida.get(Calendar.DATE);
+		int mes = data_saida.get(Calendar.MONTH) + 1;
+		int ano = data_saida.get(Calendar.YEAR);
+		
+		String data_completa = dia + "/" + mes + "/" + ano;
+		
+		return data_completa;
 	}
 	
 	/**
@@ -224,7 +268,9 @@ public class Contrato {
 	 * 			Contem as informacoes do hospede, o quarto, todos servicos usados e seu valor total, alem do valor final da estadia, a forma de pagamento e o status atual do contrato
 	 */
 	public String imprimeFaturaFinal(){
-		return hospede.toString() + servicos.get(0).toString()
+		return hospede.toString() + "\nData de entrada: " + getDataEntrada()
+				+ "\nData de saida: " + getDataSaida()
+				+ "\nDados do quarto" + servicos.get(0).toString()
 				+ "\nServicos especiais (pela ordem): " + imprimeCadaServicoEspecial()
 				+ "\nValor total dos servicos: " + calculaValorServicos() 
 				+ "\n\nValor total da estadia: " + calculaValorTotal()
@@ -239,12 +285,17 @@ public class Contrato {
 	 */
 	@Override
 	public String toString(){
+		Calendar data_atual = new GregorianCalendar();
+		int dia_atual = data_atual.get(Calendar.DATE);
+		int termino = data_saida.get(Calendar.DATE) - dia_atual;
+		
 		return hospede.toString()
-				+ "\nPeriodo da hospedagem: " + getPeriodo() 
+				+ "\nPeriodo da hospedagem: " + getPeriodo()
+				+ "\nDias restantes para termino da hospedagem: " + termino
 				+ servicos.get(0).toString()
 				+ "Status do contrato: " + mostraStatus();
 	}
-	
+
 	/**
 	 * Verifica se dois contratos sao iguais
 	 */
